@@ -33,12 +33,10 @@
 
                                 <div class="bottom-right">{!! $item->price !!}</div>
                             </div>
-
                         @endforeach
                     </div>
                 @endforeach
             </div>
         @endif
     </div>
-
 @endsection

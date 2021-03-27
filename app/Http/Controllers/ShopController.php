@@ -43,6 +43,7 @@ class ShopController extends Controller
     /**
      * @param Request $request
      * @param $id
+     * @return RedirectResponse
      */
     public function changeWishlistStatus(Request $request, $id) {
 
@@ -136,7 +137,6 @@ class ShopController extends Controller
         $items = $this->setWishListStatus($items);
 
         return view('shop.items', compact('items'));
-
     }
 
     /**

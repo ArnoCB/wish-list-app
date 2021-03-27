@@ -18,14 +18,13 @@
                     @foreach ($items_row as $item)
                         <div class="col-3 shop-item-box" id="{!! $item->id !!}">
                             <div class="top-right">
-                                <form action="/wishlist/{!! $item->api !!}_{!! $item->id !!}"
-                                      method="POST">
+                                <form name="{!! $item->api !!}_{!! $item->id !!}">
                                     {{ csrf_field() }}
-                                    {{ method_field('POST') }}
 
                                     <label>
                                         <input type="checkbox" name="{!! $item->api !!}_{!! $item->id !!}"
-                                               {{$item->wished ? 'checked' : ''}} onchange="this.form.submit();">
+                                               {{$item->wished ? 'checked' : ''}}>
+
                                     </label>
                                 </form>
                             </div>
@@ -43,6 +42,25 @@
         </div>
     @endif
 </div>
-
 @endsection
 
+@section('script')
+<script type="text/javascript">
+    $("form").on("change", function (e) {
+        const dataString = $(this).serialize();
+        const name = e.target.name;
+
+        $.ajax({
+            type: "POST",
+            url: "/wishlist/" + name,
+            data: dataString,
+            success: function () {
+
+                // it worked
+            }
+        });
+
+        e.preventDefault();
+    });
+</script>
+@endsection
