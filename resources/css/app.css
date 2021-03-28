@@ -27,6 +27,7 @@ body {
     border: 1px solid silver;
     padding: 5px;
     margin-top: -1px;
+    min-width: 280px;
 }
 
 .shop-item-box + .shop-item-box {
