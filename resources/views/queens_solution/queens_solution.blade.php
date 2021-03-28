@@ -57,7 +57,7 @@
 
                 <div class="row">
                     <div class="col">
-                      Taking reflection and rotation into account, there are ca. 5 or 6 unique solutions.
+                      Taking reflection and rotation into account, there are 6 unique solutions.
                     </div>
                 </div>
             </div>
