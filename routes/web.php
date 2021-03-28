@@ -21,6 +21,8 @@ Route::redirect('/', '/shop');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 Route::get('/wishlist', [ShopController::class, 'wishlist'])->name('wishlist');
+Route::get('/wishlist_count', [ShopController::class, 'wishlistCount']);
+
 
 Route::get('/queens_problem', [QueensProblemController::class, 'index'])->name('queens');
 
