@@ -22,7 +22,7 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 Route::get('/wishlist', [ShopController::class, 'wishlist'])->name('wishlist');
 
-Route::get('/queens_problem', [QueensProblemController::class, 'index']);
+Route::get('/queens_problem', [QueensProblemController::class, 'index'])->name('queens');
 
 Route::delete('/wishlist/{id}', function($id) {
     WishlistedItem::findOrFail($id)->delete();
