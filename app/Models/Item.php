@@ -36,4 +36,9 @@ class Item extends Model
      */
 
     public $wished;
+    /**
+     * @var mixed
+     */
+
+    public $description;
 }

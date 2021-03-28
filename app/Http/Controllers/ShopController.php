@@ -4,17 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\WishlistedItem;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use JsonException;
 
 class ShopController extends Controller
 {
 
-    private $sd_url = 'https://www.sneakerdistrict.com/';
+    // Cache the api response for the product overview for 15 minutes
+    private $cache_timeout = 15;
 
     /**
+     * Display all items for sale (Sneakers and Goods)
+     *
+     * @throws JsonException
+     */
+    public function index()
+    {
+        $items = $this->fetchSneakerItems();
+        $items = array_merge($items, $this->fetchDoingGoodsItems());
+
+        $items = $this->setWishListStatus($items);
+
+        return view('shop.items', compact('items'));
+    }
+
+    /**
+     * Convert the API response into standard readable items, so
+     * the frontend can know what to expect.
+     *
      * @param array $responseBody
      * @return array
      */
@@ -22,33 +41,41 @@ class ShopController extends Controller
     {
         $items_list = [];
 
+        // url where the sneaker product images can be found
+        $sd_url = 'https://www.sneakerdistrict.com/';
+
         foreach ($responseBody as $response) {
 
             $item = new Item;
             $item->id = $response['id'];
             $item->api = 'sneaker';
-            $item->image = $this->sd_url . $response['images']['overview'];
+            $item->image = $sd_url . $response['images']['overview'];
             $item->price =  "&euro; " .
                             number_format((float)$response['price']['incl'], 2,
                                 ',', '');
             $item->wished = false;
             $item->name = $response['brand']['title'];
+            $item->description = $response['model'];
             $items_list[$item->api . '_' . $item->id] = $item;
         }
 
         return $items_list;
     }
 
-
     /**
+     * If a user changes the 'wished' checkbox in the shop, this
+     * method is called to add the object to the wishlist, or remove it.
+     *
      * @param Request $request
      * @param $id
-     * @return RedirectResponse
+     * @return false|string
+     * @throws JsonException
      */
-    public function changeWishlistStatus(Request $request, $id) {
-
+    public function changeWishlistStatus(Request $request, $id)
+    {
         $customer_wants_this = $request->input($id) ? true : false;
 
+        // Avoid putting it on the wishlist more than once
         if ($customer_wants_this && !WishlistedItem::where('wished_item', $id)->exists()) {
 
             $wish = new WishlistedItem();
@@ -60,32 +87,51 @@ class ShopController extends Controller
             WishlistedItem::where('wished_item', $id)->delete();
         }
 
-        return back();
+        $return_data = [
+          'wishlisted_number' => WishlistedItem::count()
+        ];
+
+        return json_encode($return_data, JSON_THROW_ON_ERROR);
     }
 
     /**
-     * @see https://laravel.com/docs/8.x/http-client
+     * @return false|string
+     * @throws JsonException
+     */
+    public function wishlistCount()
+    {
+        return json_encode(['wishlisted_number' => WishlistedItem::count()], JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Call the Sneaker District API to get the products on offer.
      *
      * @return array
      * @throws JsonException
      */
-    public function sneakerItems(): array
+    public function fetchSneakerItems(): array
     {
-        $url = "https://api.sneakerdistrict.com/products";
+        return Cache::remember('shoes', $this->cache_timeout, function () {
 
-        $response = Http::get($url, [
-            'type' => 'sneakers',
-            'brand' => 'nike',
-            'page' => 1,
-            'limit' => 100,
-            'price' => '0,500'
-        ]);
+            $url = "https://api.sneakerdistrict.com/products";
 
-        $responseBody = json_decode($response->body(), true, 512, JSON_THROW_ON_ERROR);
-        return $this->convertSneakerApiResponseToItems($responseBody['products']);
+            $response = Http::get($url, [
+                    'type' => 'sneakers',
+                    'brand' => 'nike',
+                    'page' => 1,
+                    'limit' => 100,
+                    'price' => '0,500'
+                ]);
+
+            $responseBody = json_decode($response->body(), true, 512, JSON_THROW_ON_ERROR);
+            return $this->convertSneakerApiResponseToItems($responseBody['products']);
+        });
     }
 
     /**
+     * Convert the API response into standard readable items, so
+     * the frontend can know what to expect
+     *
      * @param array $responseBody
      * @return array
      */
@@ -100,6 +146,7 @@ class ShopController extends Controller
             $item->api = 'goods';
             $item->image = $response['images'][0]['src'];
             $item->name = $response['name'];
+            $item->description = false;
             $item->price = "&euro; " .
                            number_format((float)$response['price'], 2, ',', '');
             $item->wished = false;
@@ -110,33 +157,22 @@ class ShopController extends Controller
     }
 
     /**
+     * Call the Doing Goods API to get the products on offer.
+     *
      * @return array
      * @throws JsonException
      */
-    public function doingGoodsItems(): array
+    public function fetchDoingGoodsItems(): array
     {
-        $url = "https://www.doing-goods.com/wp-json/lamapress/v1/products";
+        return Cache::remember('goods', $this->cache_timeout, function () {
 
-        $response = Http::get($url);
+            $url = "https://www.doing-goods.com/wp-json/lamapress/v1/products";
 
-        $responseBody = json_decode($response->body(), true, 512, JSON_THROW_ON_ERROR);
+            $response = Http::get($url);
+            $responseBody = json_decode($response->body(), true, 512, JSON_THROW_ON_ERROR);
 
-        return $this->convertDoingGoodApiResponseToItems($responseBody['data']);
-    }
-
-    /**
-     * Display all items for sale (Sneakers and Goods)
-     *
-     * @throws JsonException
-     */
-    public function index()
-    {
-        $items = $this->sneakerItems();
-        $items = array_merge($items, $this->doingGoodsItems());
-
-        $items = $this->setWishListStatus($items);
-
-        return view('shop.items', compact('items'));
+            return $this->convertDoingGoodApiResponseToItems($responseBody['data']);
+        });
     }
 
     /**
@@ -146,8 +182,8 @@ class ShopController extends Controller
      */
     public function wishlist()
     {
-        $items = $this->sneakerItems();
-        $items = array_merge($items, $this->doingGoodsItems());
+        $items = $this->fetchSneakerItems();
+        $items = array_merge($items, $this->fetchDoingGoodsItems());
 
         $items = $this->collectWishedItems($items);
 
@@ -155,6 +191,9 @@ class ShopController extends Controller
     }
 
     /**
+     * Enrich the item data with wishlisted products. For now there is only
+     * one wishlist, but it can be made user specific
+     *
      * @param array $items
      * @return array
      */
@@ -168,12 +207,20 @@ class ShopController extends Controller
 
                 $items[$wish->wished_item]->wished = true;
             }
+            else {
+
+                // it is on the wishlist, but not available via the api anymore.
+                // remove it from the wishlist
+                WishlistedItem::where('wished_item', $wish->wished_item)->delete();
+            }
         }
 
         return $items;
     }
 
     /**
+     * Collect the data on the wished items
+     *
      * @param array $items
      * @return array
      */
@@ -191,6 +238,12 @@ class ShopController extends Controller
                 $items[$wish->wished_item]->wishlist_id = $wish->id;
 
                 $wished_items[] = $items[$wish->wished_item];
+            }
+            else {
+
+                // It is on the wishlist, but not available via the api anymore:
+                // remove it from the wishlist.
+                WishlistedItem::where('wished_item', $wish->wished_item)->delete();
             }
         }
 
