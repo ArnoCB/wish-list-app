@@ -22,7 +22,9 @@
                                     {{ csrf_field() }}
 
                                     <label>
-                                        <input type="checkbox" name="{!! $item->api !!}_{!! $item->id !!}"
+                                        <input type="checkbox"
+                                               class="form-checkbox"
+                                               name="{!! $item->api !!}_{!! $item->id !!}"
                                                {{$item->wished ? 'checked' : ''}}>
 
                                     </label>
@@ -32,9 +34,19 @@
                             <img src="{!! $item->image !!}"
                                  alt="{!! $item->api !!}" style="max-width: 100%; max-height: 80%;">
 
-                            <div class="bottom-left" style="max-width: 65%;"><b>{!! $item->name !!}</b></div>
+                            <div class="bottom-left" style="max-width: 65%;">
+                                <b>{!! $item->name !!}</b>
+                                <br>
+                                @if ($item->description)
+                                    <small>
+                                        {{ \Illuminate\Support\Str::limit($item->description, 60, $end='...') }}
+                                    </small>
+                                @endif
+                            </div>
 
-                            <div class="bottom-right">{!! $item->price !!}</div>
+                            <div class="bottom-right">
+                                {!! $item->price !!}
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -54,9 +66,11 @@
             type: "POST",
             url: "/wishlist/" + name,
             data: dataString,
-            success: function () {
+            success: function (response) {
 
-                // it worked
+                const json = JSON.parse(response);
+
+                $('#wishlist-count').html(json.wishlisted_number);
             }
         });
 
