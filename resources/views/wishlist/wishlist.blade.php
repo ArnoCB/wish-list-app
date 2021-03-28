@@ -22,7 +22,7 @@
                                         {{ csrf_field() }}
                                         {{ method_field('DELETE') }}
 
-                                        <button>delete</button>
+                                        <button>remove</button>
                                     </form>
                                 </div>
 

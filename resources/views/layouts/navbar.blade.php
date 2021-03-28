@@ -10,6 +10,10 @@
             <li class="nav-item {{ (request()->is('wishlist')) ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('wishlist') }}">Wishlist</a>
             </li>
+
+            <li class="nav-item {{ (request()->is('queens_problem')) ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('queens') }}">Queens</a>
+            </li>
         </ul>
     </div>
 </nav>
