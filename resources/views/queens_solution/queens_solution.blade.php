@@ -1,26 +1,71 @@
-<html>
-<head>
-    <link rel="stylesheet"
+@extends('layouts.app')
+
+@section('styles')
+<link rel="stylesheet"
           href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css"
           integrity="sha384-q94+BZtLrkL1/ohfjR8c6L+A6qzNH9R2hBLwyoAfu3i/WCvQjzL2RQJ3uNHDISdU"
           crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
-            integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2"
-            crossorigin="anonymous"></script>
+@endsection
+
+@section('head_scripts')
 
     <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"
             integrity="sha384-8Vi8VHwn3vjQ9eUHUxex3JSN/NFqUg3QbPyX8kWyb93+8AC/pPWTzj+nHtbC5bxD"
             crossorigin="anonymous"></script>
-</head>
-<body>
-<div id="myBoard" style="width: 400px"></div>
+@endsection
 
-<select id="select_solution">
-    @foreach ($fen_solutions as $solution)
-        <option value="{!! $solution !!}">{{$solution}}</option>
-    @endforeach
-</select>
+@section('content')
+    <div class="row mb-3">
+        <div class="col-lg-12 margin-tb">
+            <div class="text-center">
+                <h1>solutions</h1>
+            </div>
+        </div>
+    </div>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div id="myBoard" style="width:400px; "></div>
+            </div>
+
+            <div class="col-sm">
+                <div class="row">
+                    <div class="col">
+                        <p>This problem has {!! count($fen_solutions) !!} solutions,
+                            not taking rotation and reflection into account:</p>
+                    </div>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col">
+                        <label>
+                            <select id="select_solution" class="form-control input-sm" style="width:auto;">
+                                @foreach ($fen_solutions as $indexKey => $solution)
+                                    <option value="{!! $solution[0] !!}">{{ $indexKey + 1}}. {{$solution[1]}}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <p>Under reflection in the d-file solutions 1-20 are the same as solutions 40-21</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                      Taking reflection and rotation into account, there are ca. 5 or 6 unique solutions.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('script')
 <script>
     const board = Chessboard('myBoard');
 
@@ -31,7 +76,7 @@
         board.position(fen_solution);
     }).trigger('change');
 </script>
-</body>
-</html>
+@endsection
+
 
 
