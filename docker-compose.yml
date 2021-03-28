@@ -1,7 +1,7 @@
 # For more information: https://laravel.com/docs/sail
 version: '3'
 services:
-    laravel.test:
+    wishlist-app:
         build:
             context: ./vendor/laravel/sail/runtimes/8.0
             dockerfile: Dockerfile
@@ -21,7 +21,8 @@ services:
             - mysql
             - redis
     mysql:
-        image: 'library/mysql:5.7'
+        container_name: 'wishdb'
+        image: 'library/mysql:8.0'
         ports:
             - '${FORWARD_DB_PORT:-3308}:3306'
         environment:
