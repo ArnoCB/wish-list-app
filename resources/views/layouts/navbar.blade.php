@@ -26,7 +26,6 @@
     </div>
 </nav>
 
-
 <script>
     $( document ).ready(function() {
         $.ajax({
