@@ -106,13 +106,12 @@ class ShopController extends Controller
      * Call the Sneaker District API to get the products on offer.
      *
      * @return array
-     * @throws JsonException
      */
     public function fetchSneakerItems(): array
     {
         return Cache::remember('shoes', $this->cache_timeout, function () {
 
-            $url = "https://api.sneakerdistrict.com/products";
+            $url = env('SNEAKER_PRODUCTS_ENDPOINT');
 
             $response = Http::get($url, [
                     'type' => 'sneakers',
@@ -159,13 +158,12 @@ class ShopController extends Controller
      * Call the Doing Goods API to get the products on offer.
      *
      * @return array
-     * @throws JsonException
      */
     public function fetchDoingGoodsItems(): array
     {
         return Cache::remember('goods', $this->cache_timeout, function () {
 
-            $url = "https://www.doing-goods.com/wp-json/lamapress/v1/products";
+            $url = env('DOING_GOOD_PRODUCTS_ENDPOINT');
 
             $response = Http::get($url);
             $responseBody = json_decode($response->body(), true, 512, JSON_THROW_ON_ERROR);
