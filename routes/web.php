@@ -34,3 +34,7 @@ Route::delete('/wishlist/{id}', function($id) {
 
 Route::post('/wishlist/{id}', [ShopService::class, 'changeWishlistStatus']);
 
+// Catch all non existing routes
+Route::get('{any?}', function ($any) {
+    abort(404);
+})->where('any', '.*');
