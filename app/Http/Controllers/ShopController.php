@@ -11,7 +11,6 @@ use JsonException;
 
 class ShopController extends Controller
 {
-
     // Cache the api response for the product overview for 15 minutes
     private $cache_timeout = 15;
 
@@ -24,7 +23,6 @@ class ShopController extends Controller
     {
         $items = $this->fetchSneakerItems();
         $items = array_merge($items, $this->fetchDoingGoodsItems());
-
         $items = $this->setWishListStatus($items);
 
         return view('shop.items', compact('items'));
@@ -42,7 +40,7 @@ class ShopController extends Controller
         $items_list = [];
 
         // url where the sneaker product images can be found
-        $sd_url = 'https://www.sneakerdistrict.com/';
+        $sd_url = env('APP_ENV', 'SNEAKER_IMAGES_LOCATION');
 
         foreach ($responseBody as $response) {
 
@@ -73,7 +71,8 @@ class ShopController extends Controller
      */
     public function changeWishlistStatus(Request $request, $id)
     {
-        $customer_wants_this = $request->input($id) ? true : false;
+        // This evaluates to true or false
+        $customer_wants_this = $request->input($id);
 
         // Avoid putting it on the wishlist more than once
         if ($customer_wants_this && !WishlistedItem::where('wished_item', $id)->exists()) {
