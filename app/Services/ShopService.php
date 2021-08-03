@@ -11,7 +11,6 @@ use JsonException;
 
 class ShopService
 {
-
     /**
      * Convert the API response into standard readable items, so
      * the frontend can know what to expect.
@@ -157,21 +156,6 @@ class ShopService
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @throws JsonException
-     */
-    public function wishlist()
-    {
-        $items = $this->fetchSneakerItems();
-        $items = array_merge($items, $this->fetchDoingGoodsItems());
-
-        $items = $this->collectWishedItems($items);
-
-        return view('wishlist.wishlist', compact('items'));
-    }
-
-    /**
      * Enrich the item data with wishlisted products. For now there is only
      * one wishlist, but it can be made user specific
      *
@@ -205,7 +189,7 @@ class ShopService
      * @param array $items
      * @return array
      */
-    private function collectWishedItems(array $items): array
+    public function collectWishedItems(array $items): array
     {
         $wished_items = [];
 

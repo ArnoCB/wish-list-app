@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\QueensProblemController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\WishListController;
 use App\Models\WishlistedItem;
+use App\Services\ShopService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,8 +22,8 @@ Route::redirect('/', '/shop');
 
 Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
-Route::get('/wishlist', [ShopController::class, 'wishlist'])->name('wishlist');
-Route::get('/wishlist_count', [ShopController::class, 'wishlistCount']);
+Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
+Route::get('/wishlist_count', [ShopService::class, 'wishlistCount']);
 
 Route::get('/queens_problem', [QueensProblemController::class, 'index'])->name('queens');
 
@@ -30,5 +32,5 @@ Route::delete('/wishlist/{id}', function($id) {
     return back();
 });
 
-Route::post('/wishlist/{id}', [ShopController::class, 'changeWishlistStatus']);
+Route::post('/wishlist/{id}', [ShopService::class, 'changeWishlistStatus']);
 
