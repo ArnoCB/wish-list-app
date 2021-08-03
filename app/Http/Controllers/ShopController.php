@@ -40,7 +40,7 @@ class ShopController extends Controller
         $items_list = [];
 
         // url where the sneaker product images can be found
-        $sd_url = env('APP_ENV', 'SNEAKER_IMAGES_LOCATION');
+        $sd_url = env('SNEAKER_IMAGES_LOCATION');
 
         foreach ($responseBody as $response) {
 
