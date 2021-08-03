@@ -9,7 +9,7 @@ class QueensProblemSolver
      *
      * @return array
      */
-    public function solve_queens_problem(): array
+    public function solveQueensProblem(): array
     {
         // There can be only one queen per rank or file.
         // The position in the array can be seen as the
@@ -23,7 +23,7 @@ class QueensProblemSolver
         // and the constraints for the following ranks.
         // For the first rank, all files are still possible.
         $solution_paths = array_map(static function ($x) {
-            return [[$x], self::add_constraints(1, $x)];
+            return [[$x], self::addConstraints(1, $x)];
         }, $board_ranks);
 
         for ($i = 2; $i <= $board_size; $i++) {
@@ -52,7 +52,7 @@ class QueensProblemSolver
 
                         $solution_paths_extended[] = [
                             $new_path,
-                            self::add_constraints($rank_nr, $file, $constraints)
+                            self::addConstraints($rank_nr, $file, $constraints)
                         ];
                     }
                     else {
@@ -112,11 +112,12 @@ class QueensProblemSolver
      * @param int $board_size
      * @return array                an array with all constraints
      */
-    private static function add_constraints(int $rank, int $file, array $constraints = [], int $board_size = 7): array
+    private static function addConstraints(int $rank, int $file, array $constraints = [], int $board_size = 7): array
     {
         for ($i = $rank + 1; $i <= $board_size; $i++) {
 
             if (!isset($constraints[$i])) {
+
 
                 $constraints[$i] = [];
             }

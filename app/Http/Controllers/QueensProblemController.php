@@ -15,7 +15,7 @@ class QueensProblemController extends Controller
      */
     public function index()
     {
-        $fen_solutions = (new QueensProblemSolver())->solve_queens_problem();
+        $fen_solutions = (new QueensProblemSolver())->solveQueensProblem();
         return view('queens_solution.queens_solution', compact('fen_solutions'));
     }
 }
