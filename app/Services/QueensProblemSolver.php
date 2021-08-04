@@ -34,9 +34,9 @@ class QueensProblemSolver
         $board_size = 7;
         $board_ranks = range(1, $board_size);
 
-        // Array to keep account of all solutions stil in contention,
+        // Array to keep account of all solutions still in contention,
         // and the constraints for the following ranks.
-        // For the first rank, all files are still possible.
+        // For the first rank everything is still possible.
         $solution_paths = array_map(
             static fn($x) => [[$x], self::addConstraints(1, $x, [], $board_size)], $board_ranks
         );
