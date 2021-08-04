@@ -38,7 +38,7 @@ class QueensProblemSolver
         // and the constraints for the following ranks.
         // For the first rank, all files are still possible.
         $solution_paths = array_map(
-            static fn($x) => [[$x], $this->addConstraints(1, $x, [], $board_size)], $board_ranks
+            static fn($x) => [[$x], self::addConstraints(1, $x, [], $board_size)], $board_ranks
         );
 
         for ($i = 2; $i <= $board_size; $i++) {
@@ -64,7 +64,7 @@ class QueensProblemSolver
                     // If this is not the final solution, keep track of
                     // the constraints. If not, only keep the solutions.
                     $solution_paths_extended[] = ($i < $board_size)
-                        ? [$new_path, $this->addConstraints($rank_nr, $file, $constraints, $board_size)]
+                        ? [$new_path, self::addConstraints($rank_nr, $file, $constraints, $board_size)]
                         : $new_path;
                 }
             }
@@ -87,7 +87,7 @@ class QueensProblemSolver
      * @param int $board_size
      * @return array                an array with all constraints
      */
-    private function addConstraints(int $rank, int $file, array $constraints = [], int $board_size = 7): array
+    private static function addConstraints(int $rank, int $file, array $constraints = [], int $board_size = 7): array
     {
         for ($i = $rank + 1; $i <= $board_size; $i++) {
 
