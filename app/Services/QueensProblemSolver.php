@@ -118,7 +118,6 @@ class QueensProblemSolver
 
             if (!isset($constraints[$i])) {
 
-
                 $constraints[$i] = [];
             }
 

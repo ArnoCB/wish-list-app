@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Services\ShopService;
+use App\Services\WishlistService;
+use App\Services\ApiConsumers\DoingGoodsApi;
+use App\Services\ApiConsumers\SneakerApi;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -15,11 +17,9 @@ class WishListController extends Controller
      */
     public function index()
     {
-        $shopService = new ShopService();
-
-        $items = $shopService->fetchSneakerItems();
-        $items = array_merge($items, $shopService->fetchDoingGoodsItems());
-        $items = $shopService->collectWishedItems($items);
+        $items = (new SneakerApi())->fetchItems();
+        $items = array_merge($items, (new DoingGoodsApi())->fetchItems());
+        $items = (new WishlistService())->collectWishedItems($items);
 
         return view('wishlist.wishlist', compact('items'));
     }

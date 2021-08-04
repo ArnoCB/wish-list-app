@@ -1,7 +1,9 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Services\ShopService;
+use App\Services\WishlistService;
+use App\Services\ApiConsumers\DoingGoodsApi;
+use App\Services\ApiConsumers\SneakerApi;
 
 class ShopController extends Controller
 {
@@ -10,10 +12,9 @@ class ShopController extends Controller
      */
     public function index()
     {
-        $shopService = new ShopService();
-        $items = $shopService->fetchSneakerItems();
-        $items = array_merge($items, $shopService->fetchDoingGoodsItems());
-        $items = $shopService->setWishListStatus($items);
+        $items = (new SneakerApi())->fetchItems();
+        $items = array_merge($items, (new DoingGoodsApi())->fetchItems());
+        $items = (new WishlistService())->setWishListStatus($items);
 
         return view('shop.items', compact('items'));
     }
