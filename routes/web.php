@@ -24,15 +24,10 @@ Route::get('/shop', [ShopController::class, 'index'])->name('shop');
 
 Route::get('/wishlist', [WishListController::class, 'index'])->name('wishlist');
 Route::get('/wishlist_count', [WishlistService::class, 'wishlistCount']);
+Route::post('/wishlist/{id}', [WishlistService::class, 'changeWishlistStatus']);
+Route::delete('/wishlist/{id}', [WishListController::class, 'destroy']);
 
 Route::get('/queens_problem', [QueensProblemController::class, 'index'])->name('queens');
-
-Route::delete('/wishlist/{id}', function($id) {
-    WishlistedItem::findOrFail($id)->delete();
-    return back();
-});
-
-Route::post('/wishlist/{id}', [WishlistService::class, 'changeWishlistStatus']);
 
 // Catch all non existing routes
 Route::get('{any?}', function ($any) {
