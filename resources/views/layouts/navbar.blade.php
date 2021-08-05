@@ -20,7 +20,7 @@
             </li>
 
             <li class="nav-item {{ (request()->is('queens_problem')) ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('queens') }}">7 Queens Problem</a>
+                <a class="nav-link" href="{{ route('queens') }}">7 Queens Puzzle</a>
             </li>
         </ul>
     </div>
