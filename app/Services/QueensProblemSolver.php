@@ -122,10 +122,11 @@ class QueensProblemSolver
     /**
      * Convert the solutions into Forsyth-Edwards Notation (FEN)
      *
-     * @param $solution_paths
-     * @return array
+     * @param array $solution_paths     The solutions in our internal representation (a row with the file
+     *                                  where the Queen is placed for each rank.)
+     * @return array                    An array with the solutions in pairs of 8x8 and 7x7 FEN format
      */
-    private function createFenSolutions($solution_paths): array
+    private function createFenSolutions(array $solution_paths): array
     {
         $fen_solutions = [];
 
