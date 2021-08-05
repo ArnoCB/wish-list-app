@@ -18,7 +18,7 @@
     <div class="row mb-3">
         <div class="col-lg-12 margin-tb">
             <div class="text-center">
-                <h1>solutions</h1>
+                <h1>The 7 Queens Puzzle</h1>
             </div>
         </div>
     </div>
@@ -26,14 +26,18 @@
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                <div id="myBoard" style="width:400px; "></div>
+                <div id="myBoard" style="width:400px;"></div>
             </div>
 
             <div class="col-sm">
                 <div class="row">
                     <div class="col">
-                        <p>This problem has {!! count($fen_solutions) !!} solutions,
-                            not taking rotation and reflection into account:</p>
+                        <p>
+                            A solution to The 7 Queens Puzzle (similar to
+                            <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">The 8 Queens Puzzle</a>)
+                            This problem has {!! count($fen_solutions) !!} solutions,
+                            not taking rotation and reflection into account:
+                        </p>
                     </div>
                 </div>
 
