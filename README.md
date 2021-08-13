@@ -11,7 +11,6 @@ This example contains my solution to a code challenge. It consists of:
     - Solved in the backend. I used [Chris Oakman's Javascript Chessboard](https://chessboardjs.com/) to display the solutions on a 8x8 chessboard.
     
 The end result can be seen at:
-[Goods and Shoes Shop](http://188.166.12.222/shop)
 
 ### I have also dockerized the app
 Start with:
