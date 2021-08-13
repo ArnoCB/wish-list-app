@@ -62,6 +62,8 @@
         const dataString = $(this).serialize();
         const name = e.target.name;
 
+        console.log(name, dataString);
+
         $.ajax({
             type: "POST",
             url: "/wishlist/" + name,
