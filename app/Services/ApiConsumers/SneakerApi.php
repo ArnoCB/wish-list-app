@@ -7,6 +7,7 @@ use App\Models\Item;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
+
 class SneakerApi implements ShopItemsInterface
 {
     /**
@@ -56,10 +57,12 @@ class SneakerApi implements ShopItemsInterface
             $item->id = $response['id'];
             $item->api = 'sneaker';
             $item->image = $sd_url . $response['images']['overview'];
-            $item->price =  "&euro; " . $price;
+            $item->price = "&euro; " . $price;
             $item->wished = false;
             $item->name = $response['brand']['title'];
             $item->description = $response['model'];
+
+            // create a list of items
             $items_list[$item->api . '_' . $item->id] = $item;
         }
 
